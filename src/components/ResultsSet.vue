@@ -1,6 +1,5 @@
 <script setup>
 import { useSearchStore } from '../stores/search.js'
-import { computed } from 'vue'
 
 const store = useSearchStore()
 
@@ -17,10 +16,11 @@ function formatCurrency(price) {
   return `${symbols[price.currency] || price.currency}${price.min}`
 }
 
-function highlightMatch(text, query) {
-  if (!query) return text
-  const regex = new RegExp(`(${query})`, 'gi')
-  return text.replace(regex, '<mark>$1</mark>')
+function highlightQuery(text) {
+    const query = store.query;
+    if (!query) return text;
+    const regex = new RegExp(`(${query})`, 'gi');
+    return text.replace(regex, '<mark>$1</mark>');
 }
 </script>
 
@@ -47,7 +47,7 @@ function highlightMatch(text, query) {
 
                 <h3
                 class="result-title"
-                v-html="highlightMatch(item.title, store.query)"
+                v-html="highlightQuery(item.title)"
                 ></h3>
                 
                 <p class="result-price">From {{ formatCurrency(item.price) }}</p>
@@ -81,19 +81,40 @@ function highlightMatch(text, query) {
 }
 
 .spinner {
+    position: relative;
     display: inline-block;
-    width: 1rem;
-    height: 1rem;
-    border: 2px solid rgba(0,0,0,0.2);
-    border-top: 2px solid #333;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 3px solid #ccc;
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin-right: 0.5rem;
     vertical-align: middle;
 }
 
+.spinner::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 2px;
+    height: 40%;
+    background: #333;
+    transform-origin: bottom center;
+    transform: translate(-50%, -100%) rotate(0deg);
+    animation: tick 1s steps(1, end) infinite;
+}
+
 @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes tick {
+    to {
+        transform: translate(-50%, -100%) rotate(360deg);
+    }
 }
 
 .results-grid {
@@ -116,11 +137,24 @@ function highlightMatch(text, query) {
     padding: 1rem;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.result-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+mark {
+  background-color: #3b3b3b;
+  color: inherit;
+  padding: 0 2px;
+  border-radius: 3px;
 }
 
 .result-image {
-    width: 150px;
-    height: 150px;
+    width: 300px;
+    height: 300px;
     object-fit: contain;
     margin-bottom: 1rem;
 }
@@ -132,7 +166,7 @@ function highlightMatch(text, query) {
 }
 
 .result-title mark {
-    background-color: yellow;
+    background-color: #3b3b3b;
     font-weight: bold;
 }
 
@@ -144,7 +178,7 @@ function highlightMatch(text, query) {
 }
 
 .view-button {
-    background-color: #0c0c0c;
+    background-color: rgb(11, 29, 49);
     color: white;
     border: none;
     padding: 0.6rem 1.2rem;

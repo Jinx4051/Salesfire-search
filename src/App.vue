@@ -7,6 +7,7 @@ import ResultsSet from './components/ResultsSet.vue'
   <header>
     <div class="app">
       <div class="content-box">
+        <h1 class="main-heading">Discover Timeless Elegance</h1>
         <SearchBar />
         <ResultsSet />
       </div>
@@ -25,7 +26,7 @@ import ResultsSet from './components/ResultsSet.vue'
 }
 
 .content-box {
-  background-color: #fff;
+  background-color: #f5f5f5;
   padding: 2rem;
   border-radius: 1rem;
   box-shadow: 0 0 25px rgba(255, 255, 255, 0.05);
@@ -35,5 +36,12 @@ import ResultsSet from './components/ResultsSet.vue'
   min-width: 1000px;
   overflow: hidden;
   transition: all 0.2s ease;
+}
+
+.main-heading {
+  font-size: 2.5rem;
+  text-align: center;
+  margin: 2rem 0;
+  color: #111;
 }
 </style>
